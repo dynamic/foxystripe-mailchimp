@@ -1,0 +1,13 @@
+---
+Name: foxystripe-mailchimp
+---
+FoxyStripe_Controller:
+  extensions:
+    - FoxyStripeMailChimpExtension
+
+FoxyStripeMailChimpExtension:
+  use_custom_field: true
+  custom_field_name: 'newsletter_subscribe'
+  custom_field_value: 1
+  send_confirmation: true
+
