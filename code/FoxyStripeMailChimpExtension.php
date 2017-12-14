@@ -1,6 +1,6 @@
 <?php
 
-require 'fox2chimp/MailChimpUtils.php';
+use \DrewM\MailChimp\MailChimp;
 
 /**
  * Class FoxyStripeMailChimpExtension
@@ -8,64 +8,71 @@ require 'fox2chimp/MailChimpUtils.php';
 class FoxyStripeMailChimpExtension extends Extension
 {
 
-	/**
-	 * Modified from fox2chimp/fc-mailchimp.php
-	 *
-	 * @param $dataFeed
-	 */
-	public function addIntegrations($dataFeed)
-	{
-		$FoxyData = rc4crypt::decrypt(FoxyCart::getStoreKey(), $dataFeed);
-		$data = new XMLParser($FoxyData);
-		$data->Parse();
+    /**
+     * Modified from fox2chimp/fc-mailchimp.php
+     *
+     * @param $dataFeed
+     */
+    public function addIntegrations($dataFeed)
+    {
+        $FoxyData = rc4crypt::decrypt(FoxyCart::getStoreKey(), $dataFeed);
+        $data = simplexml_load_string($FoxyData);
 
-		$MailChimp_Auth = array(
-			'apikey' => Config::inst()->get(static::class, 'apikey'),
-		);
+        $apiKey = Config::inst()->get(static::class, 'apikey');
+        $listName = Config::inst()->get(static::class, 'mailing_list_name');
+        $useCustomField = Config::inst()->get(static::class, 'use_custom_field');
+        $customFieldName = Config::inst()->get(static::class, 'custom_field_name');
+        $customFieldValue = Config::inst()->get(static::class, 'custom_field_value');
+        $sendConfirmation = Config::inst()->get(static::class, 'send_confirmation');
+        $emailFormat = 'html';
 
-		$Use_Custom_Field = Config::inst()->get(static::class, 'use_custom_field');
+        // if these are not provided error
+        if (!$listName || !$apiKey) {
+            throw new LogicException('Both the MailChimp api key and the list id are required');
+        }
 
-		$Custom_Field = Config::inst()->get(static::class, 'custom_field_name');
-		$Custom_Field_Value = Config::inst()->get(static::class, 'custom_field_value');
+        $mailChimp = new MailChimp($apiKey);
 
-		// The customer's preferred email format.
-		$Email_Format = 'html';
+        $lists = $mailChimp->get('lists');
+        $listID = -1;
+        foreach ($lists as $list) {
+            if (isset($list[0]['name']) && isset($list[0]['id'])) {
+                if ($list[0]['name'] == $listName) {
+                    $listID = $list[0]['id'];
+                }
+            }
+        }
 
-		// send a confirmation?
-		$Send_Confirmation = Config::inst()->get(static::class, 'send_confirmation');
+        if ($listID === -1) {
+            throw new LogicException('No list with that name was found');
+        }
 
-		$List_Name = Config::inst()->get(static::class, 'mailing_list_name');
+        foreach ($data->transactions->transaction as $tx) {
+            $subscribe = !$useCustomField;
+            if ($useCustomField && isset($tx->custom_fields->custom_field)) {
+                foreach ($tx->custom_fields->custom_field as $field) {
+                    $subscribe = $subscribe ||
+                        ($field->custom_field_name == $customFieldName &&
+                            $field->custom_field_value == $customFieldValue);
+                }
+            }
 
-		// if these are not provided error
-		if (!$List_Name || !$MailChimp_Auth) {
-			throw new LogicException('Both the MailChimp api key and the list name are required');
-		}
 
-		foreach ($data->document->transactions[0]->transaction as $tx) {
-			$subscribe = !$Use_Custom_Field;
-			if ($Use_Custom_Field && isset($tx->custom_fields[0]->custom_field)) {
-				foreach ($tx->custom_fields[0]->custom_field as $field) {
-					$subscribe = $subscribe ||
-					             ($field->custom_field_name[0]->tagData == $Custom_Field &&
-					              $field->custom_field_value[0]->tagData == $Custom_Field_Value);
-				}
-			}
+            if ($subscribe) {
+                $response = $mailChimp->post("lists/$listID/members", [
+                    // cast email_address to a string so its not a SimpleXMLElement object
+                    'email_address' => (string) $tx->customer_email,
+                    'merge_fields' => [
+                        'FNAME' => (string) $tx->customer_first_name,
+                        'LNAME' => (string) $tx->customer_last_name,
+                    ],
+                    'status' => $sendConfirmation ? 'pending' :'subscribed',
+                    'email_type' => $emailFormat,
+                ]);
+                print_r($response);
+            }
+        }
 
-			if ($subscribe) {
-				// See MailChimpUtils.php for documentation.
-				subscribe_user_to_list(
-					array(
-						'first_name' => $tx->customer_first_name[0]->tagData,
-						'last_name' => $tx->customer_last_name[0]->tagData,
-						'email' => $tx->customer_email[0]->tagData,
-						'format' => $Email_Format,
-						'confirm' => $Send_Confirmation),
-					$List_Name,
-					$MailChimp_Auth);
-			}
-		}
-
-		print "foxy";
-	}
-
+        print "foxy";
+    }
 }
