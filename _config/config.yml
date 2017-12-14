@@ -9,5 +9,5 @@ FoxyStripeMailChimpExtension:
   use_custom_field: true
   custom_field_name: 'newsletter_subscribe'
   custom_field_value: 1
-  send_confirmation: false
+  double_opt_in: false
 

@@ -24,7 +24,7 @@ class FoxyStripeMailChimpExtension extends Extension
         $useCustomField = Config::inst()->get(static::class, 'use_custom_field');
         $customFieldName = Config::inst()->get(static::class, 'custom_field_name');
         $customFieldValue = Config::inst()->get(static::class, 'custom_field_value');
-        $sendConfirmation = Config::inst()->get(static::class, 'send_confirmation');
+        $doubleOpt = Config::inst()->get(static::class, 'double_opt_in');
         $emailFormat = 'html';
 
         // if these are not provided error
@@ -69,7 +69,7 @@ class FoxyStripeMailChimpExtension extends Extension
                         'FNAME' => (string) $tx->customer_first_name,
                         'LNAME' => (string) $tx->customer_last_name,
                     ],
-                    'status' => $sendConfirmation ? 'pending' :'subscribed',
+                    'status' => $doubleOpt ? 'pending' :'subscribed',
                     'email_type' => $emailFormat,
                 ]);
                 // TODO - do something with response?
