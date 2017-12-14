@@ -20,6 +20,7 @@ class FoxyStripeMailChimpExtension extends Extension
 
         $apiKey = Config::inst()->get(static::class, 'apikey');
         $listName = Config::inst()->get(static::class, 'mailing_list_name');
+	    $listID = Config::inst()->get(static::class, 'mailing_list_id');
         $useCustomField = Config::inst()->get(static::class, 'use_custom_field');
         $customFieldName = Config::inst()->get(static::class, 'custom_field_name');
         $customFieldValue = Config::inst()->get(static::class, 'custom_field_value');
@@ -27,20 +28,22 @@ class FoxyStripeMailChimpExtension extends Extension
         $emailFormat = 'html';
 
         // if these are not provided error
-        if (!$listName || !$apiKey) {
-            throw new LogicException('Both the MailChimp api key and the list id are required');
+        if (!($listName || $listID) || !$apiKey) {
+            throw new LogicException('Both the MailChimp api key and the list name or id are required');
         }
 
         $mailChimp = new MailChimp($apiKey);
 
-        $lists = $mailChimp->get('lists');
-        $listID = -1;
-        foreach ($lists as $list) {
-            if (isset($list[0]['name']) && isset($list[0]['id'])) {
-                if ($list[0]['name'] == $listName) {
-                    $listID = $list[0]['id'];
-                }
-            }
+        if (!$listID) {
+	        $lists = $mailChimp->get('lists');
+	        $listID = -1;
+	        foreach ($lists as $list) {
+		        if (isset($list[0]['name']) && isset($list[0]['id'])) {
+			        if ($list[0]['name'] == $listName) {
+				        $listID = $list[0]['id'];
+			        }
+		        }
+	        }
         }
 
         if ($listID === -1) {
@@ -69,7 +72,8 @@ class FoxyStripeMailChimpExtension extends Extension
                     'status' => $sendConfirmation ? 'pending' :'subscribed',
                     'email_type' => $emailFormat,
                 ]);
-                print_r($response);
+                // TODO - do something with response?
+	            // print_r($response);
             }
         }
 
