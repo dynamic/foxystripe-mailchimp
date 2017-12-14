@@ -1,9 +1,19 @@
 ---
 Name: foxystripe-mailchimp
+After:
+  - foxtstripe
 ---
 FoxyStripe_Controller:
   extensions:
     - FoxyStripeMailChimpExtension
+
+SiteConfig:
+  extensions:
+    - FoxyStripeMailChimpSiteConfig
+
+LeftAndMain:
+  extensions:
+    - FoxyStripeMailChimpLeftAndMain
 
 FoxyStripeMailChimpExtension:
   use_custom_field: true
