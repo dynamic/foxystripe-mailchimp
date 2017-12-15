@@ -17,7 +17,7 @@ class FoxyStripeMailChimpSiteConfig extends DataExtension
 
 	public function updateCMSFields(FieldList $fields)
 	{
-		Requirements::javascript(Controller::join_links(FOXYSTRIPE_MAILCHIMP . '/javascript/mailchimp-entwine.js'));
+		Requirements::javascript(FOXYSTRIPE_MAILCHIMP . '/javascript/mailchimp-entwine.js');
 
 		$mailingLists = MailChimpList::get()->map();
 		$getSegments = function ($listID) {
@@ -27,7 +27,9 @@ class FoxyStripeMailChimpSiteConfig extends DataExtension
 		};
 
 		$fields->addFieldsToTab('Root.FoxyStripe.MailChimp', array(
-			FormAction::create('updateMailing', 'Update MailChimp lists and segments'),
+			FormAction::create('updateMailing', 'Update MailChimp lists and segments')
+				->setUseButtonTag(true)
+				->setAttribute('data-icon', 'arrow-circle-double'),
 			$list = DropdownField::create('MailingListID', 'Mailing List', $mailingLists)
 				->setEmptyString('Choose a mailing list'),
 			DependentDropdownField::create('MailingSegmentID', 'Mailing Segment', $getSegments)
