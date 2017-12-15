@@ -34,7 +34,8 @@ class FoxyStripeMailChimpSiteConfig extends DataExtension
 				->setEmptyString('Choose a mailing list'),
 			DependentDropdownField::create('MailingSegmentID', 'Mailing Segment', $getSegments)
 				->setDepends($list)
-				->setEmptyString('Choose a mailing segment'),
+				->setEmptyString('Choose a mailing segment')
+				->setRightTitle('Only shows static segments'),
 		));
 	}
 }

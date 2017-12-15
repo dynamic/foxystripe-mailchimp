@@ -37,6 +37,11 @@ class FoxyStripeMailChimpLeftAndMain extends LeftAndMainExtension
 
 			$segments = $mailChimp->get("lists/$listID/segments")['segments'];
 			foreach ($segments as $segment) {
+				// skip if not static
+				if ($segment['type'] != 'static') {
+					continue;
+				}
+
 				$segmentID = $segment['id'];
 
 				$currentSegment = MailChimpSegment::get()->where(array(
