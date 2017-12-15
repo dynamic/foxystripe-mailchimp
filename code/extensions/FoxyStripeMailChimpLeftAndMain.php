@@ -30,6 +30,9 @@ class FoxyStripeMailChimpLeftAndMain extends LeftAndMainExtension
 				$current->MCID = $listID;
 				$current->Title = $list['name'];
 				$current->write();
+			} else {
+				$current->Title = $list['name'];
+				$current->write();
 			}
 
 			$segments = $mailChimp->get("lists/$listID/segments")['segments'];
@@ -45,6 +48,9 @@ class FoxyStripeMailChimpLeftAndMain extends LeftAndMainExtension
 					$currentSegment->MCID = $segmentID;
 					$currentSegment->Title = $segment['name'];
 					$currentSegment->MailingListID = $current->ID;
+					$currentSegment->write();
+				} else {
+					$currentSegment->Title = $segment['name'];
 					$currentSegment->write();
 				}
 			}

@@ -1,7 +1,5 @@
 <?php
 
-use \DrewM\MailChimp\MailChimp;
-
 /**
  * Class FoxyStripeMailChimpSiteConfig
  */
@@ -9,9 +7,12 @@ class FoxyStripeMailChimpSiteConfig extends DataExtension
 {
 
 	private static $db = array(
-		'MailingList' => 'Varchar(255)',
-		'MailingSegment' => 'Varchar(255)',
 		'DoubleOptIn' => 'Boolean',
+	);
+
+	private static $has_one = array(
+		'MailingList' => MailChimpList::class,
+		'MailingSegment' => MailChimpSegment::class,
 	);
 
 	public function updateCMSFields(FieldList $fields)
@@ -27,8 +28,11 @@ class FoxyStripeMailChimpSiteConfig extends DataExtension
 
 		$fields->addFieldsToTab('Root.FoxyStripe.MailChimp', array(
 			FormAction::create('updateMailing', 'Update MailChimp lists and segments'),
-			$list = DropdownField::create('MailingList', 'Mailing List', $mailingLists),
-			DependentDropdownField::create('MailingSegment', 'Mailing Segment', $getSegments)->setDepends($list),
+			$list = DropdownField::create('MailingListID', 'Mailing List', $mailingLists)
+				->setEmptyString('Choose a mailing list'),
+			DependentDropdownField::create('MailingSegmentID', 'Mailing Segment', $getSegments)
+				->setDepends($list)
+				->setEmptyString('Choose a mailing segment'),
 		));
 	}
 }

@@ -16,7 +16,8 @@ class MailChimpList extends DataObject
 
 	private static $indexes = array(
 		'MCID' => array(
-			'type' => 'unique'
+			'type' => 'unique',
+			'value' => 'MCID',
 		),
 	);
 }
