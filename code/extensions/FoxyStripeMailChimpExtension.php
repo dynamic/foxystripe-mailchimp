@@ -71,7 +71,5 @@ class FoxyStripeMailChimpExtension extends Extension
 	            $result = $batch->execute();
             }
         }
-
-        print "foxy";
     }
 }

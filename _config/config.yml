@@ -1,7 +1,6 @@
 ---
 Name: foxystripe-mailchimp
-After:
-  - foxtstripe
+After: foxystripe
 ---
 FoxyStripe_Controller:
   extensions:
