@@ -1,6 +1,7 @@
 ---
 Name: foxystripe-mailchimp
-After: foxystripe
+After:
+  - 'foxystripe/*'
 ---
 FoxyStripe_Controller:
   extensions:
@@ -8,6 +9,8 @@ FoxyStripe_Controller:
 
 SiteConfig:
   extensions:
+    # would get duplicate tabs if this wasn't done (after seems to be failing or something)
+    - FoxyStripeSiteConfig
     - FoxyStripeMailChimpSiteConfig
 
 LeftAndMain:
