@@ -20,6 +20,9 @@
   "suggest": {
   },
   "extra": {
-    "installer-name": "foxystripe-mailchimp"
+    "installer-name": "foxystripe-mailchimp",
+    "branch-alias": {
+      "dev-master": "2.0.x-dev"
+    }
   }
 }
