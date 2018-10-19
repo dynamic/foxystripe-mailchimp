@@ -1,23 +1,44 @@
 {
   "name": "dynamic/foxystripe-mailchimp",
   "description": "FoxyStripe Mailchimp allows users to subscribe to a mailchimp mailing list when checking out.",
-  "keywords": ["silverstripe", "foxycart", "foxystripe", "datafeed", "dynamic", "ecommerce", "mailchimp"],
-  "type": "silverstripe-module",
+  "keywords": [
+    "silverstripe",
+    "foxycart",
+    "foxystripe",
+    "datafeed",
+    "dynamic",
+    "ecommerce",
+    "mailchimp"
+  ],
+  "type": "silverstripe-vendormodule",
   "license": "BSD-3-Clause",
   "authors": [
     {
       "name": "Dynamic Inc",
-      "email": "dev@dynamicagency.com"
+      "email": "dev@dynamicagency.com",
+      "homepage": "http://www.dynamicagency.com"
     }
   ],
   "require": {
-    "silverstripe/framework": "^3.1",
-    "silverstripe/cms": "^3.1",
-    "dynamic/foxystripe": "^1.1",
-	"sheadawson/silverstripe-dependentdropdownfield": "^1.0",
-    "drewm/mailchimp-api": "^2.4"
+    "php": ">=5.6",
+    "drewm/mailchimp-api": "^2.4",
+    "dynamic/foxystripe": "^4.0",
+    "sheadawson/silverstripe-dependentdropdownfield": "^2.0",
+    "silverstripe/recipe-core": "^4.2",
+    "silverstripe/vendor-plugin": "^1.0"
   },
-  "suggest": {
+  "require-dev": {
+    "phpunit/PHPUnit": "^5.7",
+    "squizlabs/php_codesniffer": "*"
+  },
+  "config": {
+    "process-timeout": 600
+  },
+  "autoload": {
+    "psr-4": {
+      "Dynamic\\FoxyStripeMailChimp\\": "src/",
+      "Dynamic\\FoxyStripeMailChimp\\Test\\": "tests/"
+    }
   },
   "extra": {
     "installer-name": "foxystripe-mailchimp",
