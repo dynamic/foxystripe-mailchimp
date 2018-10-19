@@ -31,15 +31,17 @@
     "phpunit/PHPUnit": "^5.7",
     "squizlabs/php_codesniffer": "*"
   },
-  "config": {
-    "process-timeout": 600
-  },
   "autoload": {
     "psr-4": {
       "Dynamic\\FoxyStripeMailChimp\\": "src/",
       "Dynamic\\FoxyStripeMailChimp\\Test\\": "tests/"
     }
   },
+  "config": {
+    "process-timeout": 600
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "extra": {
     "installer-name": "foxystripe-mailchimp",
     "branch-alias": {
