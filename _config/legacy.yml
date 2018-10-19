@@ -1,0 +1,7 @@
+---
+name: foxystripe-mailchimp-legacy
+---
+SilverStripe\ORM\DatabaseAdmin:
+  classname_value_remapping:
+    MailChimpList: Dynamic\FoxyStripeMailChimp\Model\MailChimpList
+    MailChimpSegment: Dynamic\FoxyStripeMailChimp\Model\MailChimpSegment

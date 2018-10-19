@@ -1,0 +1,6 @@
+mappings:
+  MailChimpList: Dynamic\FoxyStripeMailChimp\Model\MailChimpList
+  MailChimpSegment: Dynamic\FoxyStripeMailChimp\Model\MailChimpSegment
+  FoxyStripeMailChimpSiteConfig: Dynamic\FoxyStripeMailChimp\ORM\FoxyStripeMailChimpSiteConfig
+  FoxyStripeMailChimpLeftAndMain: Dynamic\FoxyStripeMailChimp\ORM\FoxyStripeMailChimpLeftAndMain
+  FoxyStripeMailChimpExtension: Dynamic\FoxyStripeMailChimp\ORM\FoxyStripeMailChimpExtension
