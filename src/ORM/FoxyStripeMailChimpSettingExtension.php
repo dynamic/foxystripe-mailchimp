@@ -4,6 +4,7 @@ namespace Dynamic\FoxyStripeMailChimp\ORM;
 
 use Dynamic\FoxyStripeMailChimp\Model\MailChimpList;
 use Dynamic\FoxyStripeMailChimp\Model\MailChimpSegment;
+use SilverStripe\Forms\CompositeField;
 use SilverStripe\Forms\FieldList;
 use SilverStripe\View\Requirements;
 use SilverStripe\Forms\FormAction;
@@ -28,7 +29,8 @@ class FoxyStripeMailChimpSettingExtension extends DataExtension
 
     public function updateCMSFields(FieldList $fields)
     {
-        Requirements::javascript(FOXYSTRIPE_MAILCHIMP . '/javascript/mailchimp-entwine.js');
+        Requirements::css( 'dynamic/foxystripe-mailchimp: client/css/style.css');
+        Requirements::javascript('dynamic/foxystripe-mailchimp: client/js/mailchimp-entwine.js');
 
         $mailingLists = MailChimpList::get()->map();
         $getSegments = function ($listID) {
@@ -38,9 +40,11 @@ class FoxyStripeMailChimpSettingExtension extends DataExtension
         };
 
         $fields->addFieldsToTab('Root.MailChimp', array(
-            FormAction::create('updateMailing', 'Update MailChimp lists and segments')
-                ->setUseButtonTag(true)
-                ->setAttribute('data-icon', 'arrow-circle-double'),
+            CompositeField::create(
+                FormAction::create('updateMailing', 'Update MailChimp lists and segments')
+                    ->setUseButtonTag(true)
+                    ->addExtraClass('font-icon-sync')
+            ),
             $list = DropdownField::create('MailingListID', 'Mailing List', $mailingLists)
                 ->setEmptyString('Choose a mailing list'),
             DependentDropdownField::create('MailingSegmentID', 'Mailing Segment', $getSegments)
