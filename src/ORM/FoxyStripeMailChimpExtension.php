@@ -20,7 +20,7 @@ class FoxyStripeMailChimpExtension extends Extension
      */
     public function addIntegrations($dataFeed)
     {
-        $FoxyData = rc4crypt::decrypt(FoxyCart::getStoreKey(), $dataFeed);
+        $FoxyData = \rc4crypt::decrypt(FoxyCart::getStoreKey(), $dataFeed);
         $data = simplexml_load_string($FoxyData);
 
         $config = FoxyStripeSetting::current_foxystripe_setting();
