@@ -29,7 +29,7 @@ class FoxyStripeMailChimpSettingExtension extends DataExtension
 
     public function updateCMSFields(FieldList $fields)
     {
-        Requirements::css( 'dynamic/foxystripe-mailchimp: client/css/style.css');
+        Requirements::css('dynamic/foxystripe-mailchimp: client/css/style.css');
         Requirements::javascript('dynamic/foxystripe-mailchimp: client/js/mailchimp-entwine.js');
 
         $mailingLists = MailChimpList::get()->map();
