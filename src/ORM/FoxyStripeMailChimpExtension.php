@@ -1,6 +1,13 @@
 <?php
 
+namespace Dynamic\FoxyStripeMailChimp\ORM;
+
 use \DrewM\MailChimp\MailChimp;
+use Dynamic\FoxyStripe\Model\FoxyCart;
+use Dynamic\FoxyStripe\Model\FoxyStripeSetting;
+use SilverStripe\SiteConfig\SiteConfig;
+use SilverStripe\Core\Config\Config;
+use SilverStripe\Core\Extension;
 
 /**
  * Class FoxyStripeMailChimpExtension
@@ -13,16 +20,16 @@ class FoxyStripeMailChimpExtension extends Extension
      */
     public function addIntegrations($dataFeed)
     {
-        $FoxyData = rc4crypt::decrypt(FoxyCart::getStoreKey(), $dataFeed);
+        $FoxyData = \rc4crypt::decrypt(FoxyCart::getStoreKey(), $dataFeed);
         $data = simplexml_load_string($FoxyData);
 
-	    $config = SiteConfig::current_site_config();
-	    $list = $config->MailingList();
-	    $segment = $config->MailingSegment();
+        $config = FoxyStripeSetting::current_foxystripe_setting();
+        $list = $config->MailingList();
+        $segment = $config->MailingSegment();
 
-	    $apiKey = Config::inst()->get(static::class, 'apikey');
-	    $listID = $list->MCID;
-	    $segmentID = $segment->MCID;
+        $apiKey = Config::inst()->get(static::class, 'apikey');
+        $listID = $list->MCID;
+        $segmentID = $segment->MCID;
 
         $useCustomField = Config::inst()->get(static::class, 'use_custom_field');
         $customFieldName = Config::inst()->get(static::class, 'custom_field_name');
@@ -32,7 +39,7 @@ class FoxyStripeMailChimpExtension extends Extension
 
         // if these are not provided error
         if (!$listID || !$apiKey) {
-            throw new LogicException('Both the MailChimp api key and the list name or id are required');
+            throw new \LogicException('Both the MailChimp api key and the list name or id are required');
         }
 
         $mailChimp = new MailChimp($apiKey);
@@ -49,7 +56,7 @@ class FoxyStripeMailChimpExtension extends Extension
 
 
             if ($subscribe) {
-            	$batch = $mailChimp->new_batch();
+                $batch = $mailChimp->new_batch();
 
                 $batch->post("add_user", "lists/$listID/members", [
                     // cast email_address to a string so its not a SimpleXMLElement object
@@ -62,13 +69,13 @@ class FoxyStripeMailChimpExtension extends Extension
                     'email_type' => $emailFormat,
                 ]);
 
-            	if ($segmentID) {
-            		$batch->post("add_user_to_segment", "lists/$listID/segments/$segmentID/members", [
-            			'email_address' => (string) $tx->customer_email,
-		            ]);
-	            }
+                if ($segmentID) {
+                    $batch->post("add_user_to_segment", "lists/$listID/segments/$segmentID/members", [
+                        'email_address' => (string) $tx->customer_email,
+                    ]);
+                }
 
-	            $result = $batch->execute();
+                $result = $batch->execute();
             }
         }
     }

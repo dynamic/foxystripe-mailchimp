@@ -3,23 +3,17 @@ Name: foxystripe-mailchimp
 After:
   - 'foxystripe/*'
 ---
-FoxyStripe_Controller:
+Dynamic\FoxyStripe\Controller\FoxyStripeController:
   extensions:
-    - FoxyStripeMailChimpExtension
-
-SiteConfig:
+    - Dynamic\FoxyStripeMailChimp\ORM\FoxyStripeMailChimpExtension
+Dynamic\FoxyStripe\Model\FoxyStripeSetting:
   extensions:
-    # would get duplicate tabs if this wasn't done (after seems to be failing or something)
-    - FoxyStripeSiteConfig
-    - FoxyStripeMailChimpSiteConfig
-
-LeftAndMain:
+    - Dynamic\FoxyStripeMailChimp\ORM\FoxyStripeMailChimpSettingExtension
+SilverStripe\Admin\LeftAndMain:
   extensions:
-    - FoxyStripeMailChimpLeftAndMain
-
-FoxyStripeMailChimpExtension:
+    - Dynamic\FoxyStripeMailChimp\ORM\FoxyStripeMailChimpLeftAndMain
+Dynamic\FoxyStripeMailChimp\ORM\FoxyStripeMailChimpExtension:
   use_custom_field: true
-  custom_field_name: 'newsletter_subscribe'
+  custom_field_name: newsletter_subscribe
   custom_field_value: 1
   double_opt_in: false
-
